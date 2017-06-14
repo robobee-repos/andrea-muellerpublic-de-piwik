@@ -83,7 +83,7 @@ data:
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
                 fastcgi_read_timeout 600s;
-                fastcgi_write_timeout 600s;
+                fastcgi_send_timeout 600s;
                 fastcgi_cache PIWIK_CACHE;
                 fastcgi_cache_valid 200 60m;
             }
