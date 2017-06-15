@@ -93,6 +93,11 @@ spec:
       containers:
       - image: <vars.piwik.image.name>:<vars.piwik.image.version>
         name: piwik
+        env:
+        - name: PHP_MEMORY_LIMIT_MB
+          value: "<vars.piwik.php.memoryLimit_MB>"
+        - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
+          value: "<vars.piwik.php.opcacheMemoryConsumption_MB>"
         ports:
         - containerPort: 9000
           name: "php"
