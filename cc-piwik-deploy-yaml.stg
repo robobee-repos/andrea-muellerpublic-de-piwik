@@ -4,7 +4,7 @@
 * vars.piwik.image.name
 * vars.piwik.image.version
 * vars.piwik.php.memoryLimit_MB
-* vars.piwik.php.maxExecutionTime
+* vars.piwik.php.maxExecutionTime_s
 * vars.piwik.php.opcacheEnable
 * vars.piwik.php.opcacheEnableCLI
 * vars.piwik.php.opcacheMemoryConsumption_MB
@@ -102,7 +102,7 @@ spec:
         - name: PHP_MEMORY_LIMIT_MB
           value: "<vars.piwik.php.memoryLimit_MB>"
         - name: PHP_MAX_EXECUTION_TIME
-          value: "<vars.piwik.php.maxExecutionTime>"
+          value: "<vars.piwik.php.maxExecutionTime_s>"
         - name: PHP_OPCACHE_ENABLE
           value: "<vars.piwik.php.opcacheEnable>"
         - name: PHP_OPCACHE_ENABLE_CLI
