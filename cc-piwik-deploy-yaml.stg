@@ -4,6 +4,7 @@
 * vars.piwik.image.name
 * vars.piwik.image.version
 * vars.piwik.php.memoryLimit_MB
+* vars.piwik.php.maxExecutionTime
 * vars.piwik.php.opcacheMemoryConsumption_MB
 * vars.piwik.limits.cpu
 * vars.piwik.limits.memory
@@ -100,6 +101,8 @@ spec:
           value: "<vars.piwik.php.memoryLimit_MB>"
         - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
           value: "<vars.piwik.php.opcacheMemoryConsumption_MB>"
+        - name: PHP_MAX_EXECUTION_TIME
+          value: "<vars.piwik.php.maxExecutionTime>"
         ports:
         - containerPort: 9000
           name: "php"
