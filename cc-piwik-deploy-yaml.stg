@@ -3,6 +3,8 @@
 * 
 * vars.piwik.image.name
 * vars.piwik.image.version
+* vars.piwik.php.memoryLimit_MB
+* vars.piwik.php.opcacheMemoryConsumption_MB
 * vars.piwik.limits.cpu
 * vars.piwik.limits.memory
 * vars.piwik.requests.cpu
