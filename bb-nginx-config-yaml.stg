@@ -36,7 +36,7 @@ data:
         sendfile        on;
         #tcp_nopush     on;
         keepalive_timeout  65;
-        #gzip  on;
+        gzip  on;
         index index.php index.html index.htm;
         client_max_body_size <vars.nginx.clientMaxBodySize_m>m;
         server {
