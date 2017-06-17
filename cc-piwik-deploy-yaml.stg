@@ -25,24 +25,6 @@ cc-piwik-deploy-yaml(parent, vars) ::= <<
 ---
 
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: piwik-piwik-data-host
-  namespace: piwik-andrea
-  labels:
-    app: piwik
-    tier: frontend
-spec:
-  storageClassName: manual
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Gi
-
----
-
-apiVersion: v1
 kind: Service
 metadata:
   name: piwik
@@ -143,8 +125,8 @@ spec:
       restartPolicy: Always
       volumes:
       - name: piwik-piwik-data-host
-        persistentVolumeClaim:
-          claimName: piwik-piwik-data-host
+        hostPath:
+          path: /data/piwik-piwik-data-host
       - name: nginx-nginx-config
         configMap:
           name: nginx
