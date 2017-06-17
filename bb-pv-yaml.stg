@@ -1,0 +1,25 @@
+/*
+ *
+ */
+
+bb-pv-yaml(parent, vars) ::= <<
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: piwik-piwik-data
+  namespace: piwik-andrea
+  labels:
+    app: piwik
+    tier: frontend
+  annotations:
+    pv.beta.kubernetes.io/gid: "2005"
+spec:
+  storageClassName: onhost
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/data/piwik-piwik-data"
+
+>>
