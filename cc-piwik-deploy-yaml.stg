@@ -134,6 +134,16 @@ spec:
           name: piwik-piwik-data-host
         - mountPath: /nginx-in
           name: nginx-nginx-config
+      - image: gcr.io/google_containers/liveness
+        name: liveness
+        args:
+        - /server
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3
       restartPolicy: Always
       volumes:
       - name: piwik-piwik-data-host
