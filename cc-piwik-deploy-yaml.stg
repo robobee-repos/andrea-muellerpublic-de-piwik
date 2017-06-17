@@ -33,7 +33,7 @@ metadata:
     app: piwik
     tier: frontend
 spec:
-  storageClassName: onhost
+  storageClassName: manual
   accessModes:
   - ReadWriteMany
   resources:

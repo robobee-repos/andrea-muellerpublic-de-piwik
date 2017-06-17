@@ -14,7 +14,7 @@ metadata:
   annotations:
     pv.beta.kubernetes.io/gid: "2005"
 spec:
-  storageClassName: onhost
+  storageClassName: manual
   capacity:
     storage: 1Gi
   accessModes:
