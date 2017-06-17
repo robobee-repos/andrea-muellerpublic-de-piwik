@@ -26,6 +26,6 @@ spec:
       - path: /
         backend:
           serviceName: piwik
-          servicePort: 8080
+          servicePort: 9090
 
 >>

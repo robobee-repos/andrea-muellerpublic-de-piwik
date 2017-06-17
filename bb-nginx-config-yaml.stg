@@ -40,8 +40,8 @@ data:
         index index.php index.html index.htm;
         client_max_body_size <vars.nginx.clientMaxBodySize_m>m;
         server {
-            listen 8080 default_server;
-            listen [::]:8080 default_server;
+            listen 9090 default_server;
+            listen [::]:9090 default_server;
             root /var/www/html;
             server_name <vars.nginx.hosts;separator=" ">;
             index index.php;
