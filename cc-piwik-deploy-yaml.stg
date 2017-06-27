@@ -175,7 +175,7 @@ spec:
                   operator: In
                   values:
                   - piwik
-                  topologyKey: kubernetes.io/hostname
+              topologyKey: kubernetes.io/hostname
       tolerations:
       - effect: NoSchedule
         key: dedicated
