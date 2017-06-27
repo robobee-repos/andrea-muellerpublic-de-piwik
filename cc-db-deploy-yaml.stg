@@ -123,11 +123,11 @@ spec:
           preferredDuringSchedulingIgnoredDuringExecution:
             - weight: 10
               preference:
-              matchExpressions:
-              - key: muellerpublic.de/role
-                operator: In
-                values:
-                - web
+                matchExpressions:
+                - key: muellerpublic.de/role
+                  operator: In
+                  values:
+                  - web
         podAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 100
