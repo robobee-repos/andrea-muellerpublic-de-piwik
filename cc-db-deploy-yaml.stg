@@ -142,7 +142,7 @@ spec:
       tolerations:
       - effect: NoSchedule
         key: dedicated
-        operator: Equals
+        operator: Equal
         value: web
 
 ---
