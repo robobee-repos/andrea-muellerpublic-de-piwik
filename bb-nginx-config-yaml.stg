@@ -85,7 +85,6 @@ data:
             # php-fpm ping and status.
             location ~ ^/(phpstatus|ping)$ {
                 fastcgi_pass   piwik-php:9000;
-                fastcgi_index  index.php;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
             }
