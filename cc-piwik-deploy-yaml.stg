@@ -145,7 +145,7 @@ spec:
           httpGet:
             path: /ping
             port: 9090
-          initialDelaySeconds: 3
+          initialDelaySeconds: 60
           periodSeconds: 3
       restartPolicy: Always
       volumes:
@@ -155,6 +155,32 @@ spec:
       - name: nginx-nginx-config
         configMap:
           name: nginx
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                - key: muellerpublic.de/role
+                  operator: In
+                  values:
+                  - web
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: group
+                  operator: In
+                  values:
+                  - piwik
+              topologyKey: kubernetes.io/hostname
+      tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Equal
+        value: web
 
 ---
 

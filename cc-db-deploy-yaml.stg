@@ -19,6 +19,7 @@ metadata:
   labels:
     app: mariadb
     tier: backend
+    group: piwik
 spec:
   accessModes:
   - ReadWriteOnce
@@ -36,6 +37,7 @@ metadata:
   labels:
     app: mariadb
     tier: backend
+    group: piwik
 spec:
   ports:
   - name: "mysql"
@@ -54,17 +56,18 @@ metadata:
   labels:
     app: mariadb
     tier: backend
+    group: piwik
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: mariadb
-      tier: backend
   template:
     metadata:
       labels:
         app: mariadb
         tier: backend
+        group: piwik
     spec:
       containers:
       - image: bitnami/mariadb:latest
@@ -115,6 +118,32 @@ spec:
       - name: mariadb-mariadb-data
         persistentVolumeClaim:
           claimName: mariadb-mariadb-data
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                - key: muellerpublic.de/role
+                  operator: In
+                  values:
+                  - web
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: group
+                  operator: In
+                  values:
+                  - piwik
+              topologyKey: kubernetes.io/hostname
+      tolerations:
+      - effect: NoSchedule
+        key: dedicated
+        operator: Equal
+        value: web
 
 ---
 

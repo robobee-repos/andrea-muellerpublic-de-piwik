@@ -4,7 +4,7 @@
 * vars.nginx.hosts[]
 * vars.nginx.workerProcesses
 * vars.nginx.workerConnections
-* vars.nginx.clientMaxBodySize_m
+* vars.nginx.clientMaxBodySize
 *
 */
 
@@ -38,7 +38,7 @@ data:
         keepalive_timeout  65;
         gzip  on;
         index index.php index.html index.htm;
-        client_max_body_size <vars.nginx.clientMaxBodySize_m>m;
+        client_max_body_size <vars.nginx.clientMaxBodySize>;
         server {
             listen 9090 default_server;
             listen [::]:9090 default_server;
