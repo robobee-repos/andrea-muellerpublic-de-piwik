@@ -1,5 +1,5 @@
 readinessProbe(parent, vars) ::= <<
-        livenessProbe
+        livenessProbe:
           tcpSocket:
             port: 3306
           initialDelaySeconds: 30
