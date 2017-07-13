@@ -5,7 +5,7 @@
  * vars.nginx.workerProcesses
  * vars.nginx.workerConnections
  * vars.nginx.clientMaxBodySize
- *
+ * vars.piwik.php.maxExecutionTime
  */
 
 bb-nginx-config-yaml(parent, vars) ::= <<
@@ -75,8 +75,8 @@ data:
                 fastcgi_index  index.php;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
-                fastcgi_read_timeout <vars.piwik.php.maxExecutionTime_s>s;
-                fastcgi_send_timeout <vars.piwik.php.maxExecutionTime_s>s;
+                fastcgi_read_timeout <vars.piwik.php.maxExecutionTime>;
+                fastcgi_send_timeout <vars.piwik.php.maxExecutionTime>;
             }
             #
             location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
