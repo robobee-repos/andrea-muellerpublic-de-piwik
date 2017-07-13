@@ -1,11 +1,11 @@
 /*
-* Mandatory:
-* 
-* vars.db.limits.cpu
-* vars.db.limits.memory
-* vars.db.requests.cpu
-* vars.db.requests.memory
-*/
+ * Mandatory:
+ * 
+ * vars.db.limits.cpu
+ * vars.db.limits.memory
+ * vars.db.requests.cpu
+ * vars.db.requests.memory
+ */
 
 cc-db-deploy-yaml(parent, vars) ::= <<
 
@@ -19,7 +19,7 @@ metadata:
   labels:
     app: mariadb
     tier: backend
-    group: piwik
+    group: piwik-andrea
 spec:
   accessModes:
   - ReadWriteOnce
@@ -37,7 +37,7 @@ metadata:
   labels:
     app: mariadb
     tier: backend
-    group: piwik
+    group: piwik-andrea
 spec:
   ports:
   - name: "mysql"
@@ -56,7 +56,7 @@ metadata:
   labels:
     app: mariadb
     tier: backend
-    group: piwik
+    group: piwik-andrea
 spec:
   replicas: 1
   selector:
@@ -67,7 +67,7 @@ spec:
       labels:
         app: mariadb
         tier: backend
-        group: piwik
+        group: piwik-andrea
     spec:
       containers:
       - image: bitnami/mariadb:latest
@@ -113,37 +113,14 @@ spec:
         volumeMounts:
         - mountPath: /bitnami/mariadb
           name: mariadb-mariadb-data
+<readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
       - name: mariadb-mariadb-data
         persistentVolumeClaim:
           claimName: mariadb-mariadb-data
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 10
-              preference:
-                matchExpressions:
-                - key: muellerpublic.de/role
-                  operator: In
-                  values:
-                  - web
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: group
-                  operator: In
-                  values:
-                  - piwik
-              topologyKey: kubernetes.io/hostname
-      tolerations:
-      - effect: NoSchedule
-        key: dedicated
-        operator: Equal
-        value: web
+<affinitiesGroup(parent, vars)>
+<tolerationsGroup(parent, vars)>
 
 ---
 
