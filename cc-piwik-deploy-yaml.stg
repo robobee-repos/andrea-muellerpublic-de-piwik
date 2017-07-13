@@ -165,6 +165,8 @@ spec:
           name: piwik-piwik-data
         - mountPath: /nginx-in
           name: nginx-nginx-config
+      restartPolicy: Always
+      volumes:
       - name: piwik-piwik-data
         persistentVolumeClaim:
           claimName: piwik-piwik-data
