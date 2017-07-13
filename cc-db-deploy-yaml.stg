@@ -7,6 +7,10 @@
  * vars.db.requests.memory
  */
 
+import "maradns_probe.stg"
+import "affinities.stg"
+import "tolerations.stg"
+
 cc-db-deploy-yaml(parent, vars) ::= <<
 
 ---

@@ -24,6 +24,9 @@
  * vars.nginx.requests.memory
  */
 
+import "affinities.stg"
+import "tolerations.stg"
+
 cc-piwik-deploy-yaml(parent, vars) ::= <<
 
 ---
