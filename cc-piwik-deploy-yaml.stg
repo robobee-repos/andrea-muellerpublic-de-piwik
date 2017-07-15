@@ -1,30 +1,51 @@
 /*
-* Mandatory:
-* 
-* vars.piwik.image.name
-* vars.piwik.image.version
-* vars.piwik.php.memoryLimit_MB
-* vars.piwik.php.maxExecutionTime_s
-* vars.piwik.php.maxChildren
-* vars.piwik.php.startServers
-* vars.piwik.php.minSpareServers
-* vars.piwik.php.maxSpareServers
-* vars.piwik.php.opcacheEnable
-* vars.piwik.php.opcacheEnableCLI
-* vars.piwik.php.opcacheMemoryConsumption_MB
-* vars.piwik.limits.cpu
-* vars.piwik.limits.memory
-* vars.piwik.requests.cpu
-* vars.piwik.requests.memory
-* vars.nginx.image.name
-* vars.nginx.image.version
-* vars.nginx.limits.cpu
-* vars.nginx.limits.memory
-* vars.nginx.requests.cpu
-* vars.nginx.requests.memory
-*/
+ * Mandatory:
+ * 
+ * vars.piwik.image.name
+ * vars.piwik.image.version
+ * vars.piwik.php.memoryLimit_MB
+ * vars.piwik.php.maxExecutionTime
+ * vars.piwik.php.maxChildren
+ * vars.piwik.php.startServers
+ * vars.piwik.php.minSpareServers
+ * vars.piwik.php.maxSpareServers
+ * vars.piwik.php.opcacheEnable
+ * vars.piwik.php.opcacheEnableCLI
+ * vars.piwik.php.opcacheMemoryConsumption_MB
+ * vars.piwik.limits.cpu
+ * vars.piwik.limits.memory
+ * vars.piwik.requests.cpu
+ * vars.piwik.requests.memory
+ * vars.nginx.image.name
+ * vars.nginx.image.version
+ * vars.nginx.limits.cpu
+ * vars.nginx.limits.memory
+ * vars.nginx.requests.cpu
+ * vars.nginx.requests.memory
+ */
+
+import "affinities.stg"
+import "tolerations.stg"
 
 cc-piwik-deploy-yaml(parent, vars) ::= <<
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: piwik-piwik-data
+  namespace: cloud-muellerpublic-de
+  labels:
+    app: piwik
+    tier: frontend
+    group: piwik-andrea
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
 
 ---
 
@@ -36,11 +57,12 @@ metadata:
   labels:
     app: piwik
     tier: frontend
+    group: piwik-andrea
 spec:
   ports:
   - name: "http"
-    port: 9090
-    targetPort: 9090
+    port: 8080
+    targetPort: 8080
   selector:
     app: piwik
 
@@ -54,6 +76,7 @@ metadata:
   labels:
     app: piwik
     tier: frontend
+    group: piwik-andrea
 spec:
   ports:
   - name: "php"
@@ -72,6 +95,7 @@ metadata:
   labels:
     app: piwik
     tier: frontend
+    group: piwik-andrea
 spec:
   replicas: 1
   strategy:
@@ -81,6 +105,7 @@ spec:
       labels:
         app: piwik
         tier: frontend
+        group: piwik-andrea
     spec:
       containers:
       - image: <vars.piwik.image.name>:<vars.piwik.image.version>
@@ -89,7 +114,7 @@ spec:
         - name: PHP_MEMORY_LIMIT_MB
           value: "<vars.piwik.php.memoryLimit_MB>"
         - name: PHP_MAX_EXECUTION_TIME
-          value: "<vars.piwik.php.maxExecutionTime_s>"
+          value: "<vars.piwik.php.maxExecutionTime>"
         - name: PHP_FPM_MAX_CHILDREN
           value: "<vars.piwik.php.maxChildren>"
         - name: PHP_FPM_START_SERVERS
@@ -116,15 +141,21 @@ spec:
             memory: <vars.piwik.requests.memory>
         volumeMounts:
         - mountPath: /var/www/html
-          name: piwik-piwik-data-host
+          name: piwik-piwik-data
       - image: <vars.nginx.image.name>:<vars.nginx.image.version>
         name: nginx
         env:
         - name: NGINX_HTTP_PORT
-          value: "9090"
+          value: "8080"
         ports:
-        - containerPort: 9090
+        - containerPort: 8080
           name: "http"
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 60
         resources:
           limits:
             cpu: <vars.nginx.limits.cpu>
@@ -134,53 +165,19 @@ spec:
             memory: <vars.nginx.requests.memory>
         volumeMounts:
         - mountPath: /var/www/html
-          name: piwik-piwik-data-host
+          name: piwik-piwik-data
         - mountPath: /nginx-in
           name: nginx-nginx-config
-      - image: gcr.io/google_containers/liveness
-        name: liveness
-        args:
-        - /server
-        livenessProbe:
-          httpGet:
-            path: /ping
-            port: 9090
-          initialDelaySeconds: 60
-          periodSeconds: 3
       restartPolicy: Always
       volumes:
-      - name: piwik-piwik-data-host
-        hostPath:
-          path: /data/piwik-piwik-data-host
+      - name: piwik-piwik-data
+        persistentVolumeClaim:
+          claimName: piwik-piwik-data
       - name: nginx-nginx-config
         configMap:
           name: nginx
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 10
-              preference:
-                matchExpressions:
-                - key: muellerpublic.de/role
-                  operator: In
-                  values:
-                  - web
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: group
-                  operator: In
-                  values:
-                  - piwik
-              topologyKey: kubernetes.io/hostname
-      tolerations:
-      - effect: NoSchedule
-        key: dedicated
-        operator: Equal
-        value: web
+<affinitiesGroup(parent, vars)>
+<tolerationsGroup(parent, vars)>
 
 ---
 

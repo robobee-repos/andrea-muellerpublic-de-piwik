@@ -1,6 +1,6 @@
 /*
-*
-*/
+ *
+ */
 xx-piwik-ingress-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -10,10 +10,12 @@ metadata:
   labels:
     app: piwik
     tier: frontend
+    group: piwik-andrea
   annotations:
     kubernetes.io/ingress.class: "nginx"
     kubernetes.io/tls-acme: "true"
     ingress.kubernetes.io/affinity: "cookie"
+    ingress.kubernetes.io/proxy-body-size: <vars.nginx.clientMaxBodySize>
 spec:
   tls:
   - hosts:
@@ -26,6 +28,6 @@ spec:
       - path: /
         backend:
           serviceName: piwik
-          servicePort: 9090
+          servicePort: 8080
 
 >>

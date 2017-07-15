@@ -1,12 +1,12 @@
 /*
-* Mandatory:
-* 
-* vars.nginx.hosts[]
-* vars.nginx.workerProcesses
-* vars.nginx.workerConnections
-* vars.nginx.clientMaxBodySize
-*
-*/
+ * Mandatory:
+ * 
+ * vars.nginx.hosts[]
+ * vars.nginx.workerProcesses
+ * vars.nginx.workerConnections
+ * vars.nginx.clientMaxBodySize
+ * vars.piwik.php.maxExecutionTime
+ */
 
 bb-nginx-config-yaml(parent, vars) ::= <<
 apiVersion: v1
@@ -17,6 +17,7 @@ metadata:
   labels:
     app: nginx
     tier: frontend
+    group: piwik-andrea
 data:
   nginx.conf: |
     #user  nginx;
@@ -40,8 +41,8 @@ data:
         index index.php index.html index.htm;
         client_max_body_size <vars.nginx.clientMaxBodySize>;
         server {
-            listen 9090 default_server;
-            listen [::]:9090 default_server;
+            listen 8080 default_server;
+            listen [::]:8080 default_server;
             root /var/www/html;
             server_name <vars.nginx.hosts;separator=" ">;
             index index.php;
@@ -74,8 +75,8 @@ data:
                 fastcgi_index  index.php;
                 fastcgi_param PATH_TRANSLATED $document_root$fastcgi_script_name;
                 include        fastcgi_params;
-                fastcgi_read_timeout <vars.piwik.php.maxExecutionTime_s>s;
-                fastcgi_send_timeout <vars.piwik.php.maxExecutionTime_s>s;
+                fastcgi_read_timeout <vars.piwik.php.maxExecutionTime>;
+                fastcgi_send_timeout <vars.piwik.php.maxExecutionTime>;
             }
             #
             location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
