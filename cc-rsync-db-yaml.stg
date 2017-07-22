@@ -1,0 +1,110 @@
+/*
+ * Mandatory:
+ *
+ * vars.rsync.image.name
+ * vars.rsync.image.version
+ * vars.rsync.limits.cpu
+ * vars.rsync.limits.memory
+ * vars.rsync.requests.cpu
+ * vars.rsync.requests.memory
+ */
+
+import "affinities.stg"
+import "tolerations.stg"
+
+cc-rsync-db-yaml(parent, vars) ::= <<
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rsync-db
+  namespace: piwik-andrea
+  labels:
+    app: rsync-db
+    tier: backup
+    group: piwik-andrea
+spec:
+  ports:
+  - name: "rsync"
+    port: 8873
+    targetPort: 8873
+  selector:
+    app: rsync-db
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rsync-db
+  namespace: piwik-andrea
+  labels:
+    app: rsync-db
+    tier: backup
+    group: piwik-andrea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rsync-db
+      tier: backup
+      group: piwik-andrea
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rsync-db
+        tier: backup
+        group: piwik-andrea
+    spec:
+      containers:
+      - image: <vars.rsync.image.name>:<vars.rsync.image.version>
+        name: rsync-db
+        env:
+        - name: RSYNC_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: rsync-passwords
+              key: user
+        - name: RSYNC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rsync-passwords
+              key: password
+        ports:
+        - containerPort: 8873
+          name: "rsync"
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -i
+            - -c
+            - "rsync rsync://${RSYNC_USERNAME}@localhost:8873/data/data/data/performance_schema /tmp/"
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+        resources:
+          limits:
+            cpu: <vars.rsync.limits.cpu>
+            memory: <vars.rsync.limits.memory>
+          requests:
+            cpu: <vars.rsync.requests.cpu>
+            memory: <vars.rsync.requests.memory>
+        volumeMounts:
+        - mountPath: /data
+          name: mariadb-mariadb-data
+          subPath: mariadb
+      restartPolicy: Always
+      volumes:
+      - name: mariadb-mariadb-data
+        persistentVolumeClaim:
+          claimName: mariadb-mariadb-data
+<affinitiesGroup(parent, vars)>
+<tolerationsGroup(parent, vars)>
+
+---
+
+>>
