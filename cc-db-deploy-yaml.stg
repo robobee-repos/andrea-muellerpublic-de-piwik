@@ -1,6 +1,6 @@
 /*
  * Mandatory:
- * 
+ *
  * vars.db.limits.cpu
  * vars.db.limits.memory
  * vars.db.requests.cpu

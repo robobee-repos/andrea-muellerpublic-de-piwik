@@ -1,3 +1,7 @@
+/*
+ *
+ */
+
 tolerationsGroup(parent, vars) ::= <<
       tolerations:
       - effect: NoSchedule

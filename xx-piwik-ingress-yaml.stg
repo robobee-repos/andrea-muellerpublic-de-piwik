@@ -1,6 +1,7 @@
 /*
  *
  */
+
 xx-piwik-ingress-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Ingress

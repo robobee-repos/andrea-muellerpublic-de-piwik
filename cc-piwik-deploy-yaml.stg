@@ -1,6 +1,6 @@
 /*
  * Mandatory:
- * 
+ *
  * vars.piwik.image.name
  * vars.piwik.image.version
  * vars.piwik.php.memoryLimit_MB
