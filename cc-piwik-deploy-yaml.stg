@@ -32,24 +32,6 @@ cc-piwik-deploy-yaml(parent, vars) ::= <<
 ---
 
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: piwik-piwik-data
-  namespace: piwik-andrea
-  labels:
-    app: piwik
-    tier: frontend
-    group: piwik-andrea
-spec:
-  accessModes:
-  - ReadWriteMany
-  resources:
-    requests:
-      storage: 2Gi
-
----
-
-apiVersion: v1
 kind: Service
 metadata:
   name: piwik
@@ -141,7 +123,7 @@ spec:
             memory: <vars.piwik.requests.memory>
         volumeMounts:
         - mountPath: /var/www/html
-          name: piwik-piwik-data
+          name: piwik-data
       - image: <vars.nginx.image.name>:<vars.nginx.image.version>
         name: nginx
         env:
@@ -171,16 +153,16 @@ spec:
             memory: <vars.nginx.requests.memory>
         volumeMounts:
         - mountPath: /var/www/html
-          name: piwik-piwik-data
+          name: piwik-data
           subPath: piwik
         - mountPath: /nginx-in
-          name: nginx-nginx-config
+          name: nginx-config
       restartPolicy: Always
       volumes:
-      - name: piwik-piwik-data
+      - name: piwik-data
         persistentVolumeClaim:
-          claimName: piwik-piwik-data
-      - name: nginx-nginx-config
+          claimName: piwik-data
+      - name: nginx-config
         configMap:
           name: nginx
 <affinitiesGroup(parent, vars)>

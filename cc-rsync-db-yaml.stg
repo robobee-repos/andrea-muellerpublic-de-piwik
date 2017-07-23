@@ -95,13 +95,13 @@ spec:
             memory: <vars.rsync.requests.memory>
         volumeMounts:
         - mountPath: /data
-          name: mariadb-mariadb-data
+          name: piwik-data
           subPath: mariadb
       restartPolicy: Always
       volumes:
-      - name: mariadb-mariadb-data
+      - name: piwik-data
         persistentVolumeClaim:
-          claimName: mariadb-mariadb-data
+          claimName: piwik-data
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 
