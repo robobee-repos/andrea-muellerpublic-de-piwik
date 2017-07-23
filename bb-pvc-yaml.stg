@@ -6,7 +6,7 @@ bb-pvc-secret-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: piwik-data
+  name: piwik-piwik-data
   namespace: piwik-andrea
   labels:
     group: piwik-andrea
