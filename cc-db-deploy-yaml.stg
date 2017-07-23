@@ -99,7 +99,7 @@ spec:
         volumeMounts:
         - mountPath: /bitnami/mariadb
           name: piwik-piwik-data
-          subPath: maradns
+          subPath: mariadb
 <readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
