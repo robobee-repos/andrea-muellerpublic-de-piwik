@@ -77,14 +77,11 @@ spec:
         ports:
         - containerPort: 8873
           name: "rsync"
-        readinessProbe:
-          exec:
-            command:
-            - /bin/sh
-            - -i
-            - -c
-            - "rsync rsync://${RSYNC_USERNAME}@localhost:8873/data/data/data/performance_schema /tmp/"
-          initialDelaySeconds: 60
+        livenessProbe:
+          tcpSocket:
+            port: 8873
+          initialDelaySeconds: 10
+          periodSeconds: 60
           timeoutSeconds: 10
         resources:
           limits:
