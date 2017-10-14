@@ -14,29 +14,7 @@ import "tolerations.stg"
 /*
  *
  */
-cc-rsync-mariadb-yaml(parent, vars) ::= <<
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: rsync-mariadb
-  namespace: piwik-andrea
-  labels:
-    app: rsync-mariadb
-    tier: backup
-    group: piwik-andrea
-spec:
-  ports:
-  - name: "rsync"
-    port: 8873
-    targetPort: 8873
-  selector:
-    app: rsync-mariadb
-
----
-
+cc-rsync-mariadb-deploy-yaml(parent, vars) ::= <<
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -66,25 +44,23 @@ spec:
       - image: <vars.rsync.image.name>:<vars.rsync.image.version>
         name: rsync-mariadb
         env:
-        - name: RSYNC_USERNAME
+        - name: RSYNC_AUTHORIZED_KEY
           valueFrom:
             secretKeyRef:
-              name: rsync-passwords
-              key: user
-        - name: RSYNC_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: rsync-passwords
-              key: password
+              name: rsync-ssh
+              key: auth-key
+        - name: USER
+          value: "root"
         ports:
-        - containerPort: 8873
-          name: "rsync"
-        livenessProbe:
-          tcpSocket:
-            port: 8873
-          initialDelaySeconds: 10
-          periodSeconds: 60
-          timeoutSeconds: 10
+        - containerPort: 2222
+          name: ssh
+        readinessProbe:
+          exec:
+            command:
+            - /readiness.sh
+            - /data/conf/my.cnf
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
         resources:
           limits:
             cpu: <vars.rsync.limits.cpu>
@@ -103,7 +79,5 @@ spec:
           claimName: piwik-andrea
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
-
----
 
 >>
