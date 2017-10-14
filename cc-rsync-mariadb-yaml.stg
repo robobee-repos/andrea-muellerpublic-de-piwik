@@ -14,17 +14,17 @@ import "tolerations.stg"
 /*
  *
  */
-cc-rsync-db-yaml(parent, vars) ::= <<
+cc-rsync-mariadb-yaml(parent, vars) ::= <<
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: rsync-db
+  name: rsync-mariadb
   namespace: piwik-andrea
   labels:
-    app: rsync-db
+    app: rsync-mariadb
     tier: backup
     group: piwik-andrea
 spec:
@@ -33,24 +33,24 @@ spec:
     port: 8873
     targetPort: 8873
   selector:
-    app: rsync-db
+    app: rsync-mariadb
 
 ---
 
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: rsync-db
+  name: rsync-mariadb
   namespace: piwik-andrea
   labels:
-    app: rsync-db
+    app: rsync-mariadb
     tier: backup
     group: piwik-andrea
 spec:
   replicas: 0
   selector:
     matchLabels:
-      app: rsync-db
+      app: rsync-mariadb
       tier: backup
       group: piwik-andrea
   strategy:
@@ -58,13 +58,13 @@ spec:
   template:
     metadata:
       labels:
-        app: rsync-db
+        app: rsync-mariadb
         tier: backup
         group: piwik-andrea
     spec:
       containers:
       - image: <vars.rsync.image.name>:<vars.rsync.image.version>
-        name: rsync-db
+        name: rsync-mariadb
         env:
         - name: RSYNC_USERNAME
           valueFrom:
@@ -95,7 +95,7 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: db
-          subPath: mariadb
+          subPath: db
       restartPolicy: Always
       volumes:
       - name: db
