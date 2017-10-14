@@ -47,7 +47,7 @@ metadata:
     tier: backup
     group: piwik-andrea
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: rsync-db
