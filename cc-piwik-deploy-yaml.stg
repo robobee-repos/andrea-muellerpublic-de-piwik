@@ -12,6 +12,7 @@
  * vars.piwik.php.opcacheEnable
  * vars.piwik.php.opcacheEnableCLI
  * vars.piwik.php.opcacheMemoryConsumption_MB
+ * vars.piwik.php.slowlogTimeout
  * vars.piwik.limits.cpu
  * vars.piwik.limits.memory
  * vars.piwik.requests.cpu
@@ -113,6 +114,8 @@ spec:
           value: "<vars.piwik.php.opcacheEnableCLI>"
         - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
           value: "<vars.piwik.php.opcacheMemoryConsumption_MB>"
+        - name: PHP_FPM_REQUEST_SLOWLOG_TIMEOUT
+          value: "<vars.piwik.php.slowlogTimeout>"
         ports:
         - containerPort: 9000
           name: "php"
