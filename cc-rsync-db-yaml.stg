@@ -8,10 +8,12 @@
  * vars.rsync.requests.cpu
  * vars.rsync.requests.memory
  */
-
 import "affinities.stg"
 import "tolerations.stg"
 
+/*
+ *
+ */
 cc-rsync-db-yaml(parent, vars) ::= <<
 
 ---
@@ -92,13 +94,13 @@ spec:
             memory: <vars.rsync.requests.memory>
         volumeMounts:
         - mountPath: /data
-          name: piwik-piwik-data
+          name: db
           subPath: mariadb
       restartPolicy: Always
       volumes:
-      - name: piwik-piwik-data
+      - name: db
         persistentVolumeClaim:
-          claimName: piwik-piwik-data
+          claimName: piwik-andrea
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 

@@ -1,12 +1,13 @@
 /*
+ * Mandatory:
  *
+ * vars.volume.storage
  */
-
-bb-pvc-yaml(parent, vars) ::= <<
+aa-pvc-yaml(parent, vars) ::= <<
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: piwik-piwik-data
+  name: piwik-andrea
   namespace: piwik-andrea
   labels:
     group: piwik-andrea
@@ -15,6 +16,6 @@ spec:
   - ReadWriteMany
   resources:
     requests:
-      storage: 2Gi
+      storage: <vars.volume.storage>
 
 >>

@@ -6,11 +6,13 @@
  * vars.db.requests.cpu
  * vars.db.requests.memory
  */
-
 import "maradns_probe.stg"
 import "affinities.stg"
 import "tolerations.stg"
 
+/*
+ *
+ */
 cc-db-deploy-yaml(parent, vars) ::= <<
 
 ---
@@ -98,14 +100,14 @@ spec:
             memory: <vars.db.requests.memory>
         volumeMounts:
         - mountPath: /bitnami/mariadb
-          name: piwik-piwik-data
-          subPath: mariadb
+          name: db
+          subPath: db
 <readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
-      - name: piwik-piwik-data
+      - name: db
         persistentVolumeClaim:
-          claimName: piwik-piwik-data
+          claimName: piwik-andrea
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 
