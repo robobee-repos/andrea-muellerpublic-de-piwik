@@ -1,0 +1,91 @@
+/*
+ * Mandatory:
+ *
+ * vars.redis.image.name
+ * vars.redis.image.version
+ * vars.redis.limits.cpu
+ * vars.redis.limits.memory
+ * vars.redis.requests.cpu
+ * vars.redis.requests.memory
+ */
+import "affinities.stg"
+import "tolerations.stg"
+
+/*
+ *
+ */
+cc-redis-deploy-yaml(parent, vars) ::= <<
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: piwik-andrea
+  labels:
+    app: redis
+    tier: cache
+    group: piwik-andrea
+spec:
+  ports:
+  - name: "redis"
+    port: 6379
+    targetPort: 6379
+  selector:
+    app: redis
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: piwik-andrea
+  labels:
+    app: redis
+    tier: cache
+    group: piwik-andrea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+      tier: cache
+      group: piwik-andrea
+  template:
+    metadata:
+      labels:
+        app: redis
+        tier: cache
+        group: piwik-andrea
+    spec:
+      containers:
+      - image: <vars.redis.image.name>:<vars.redis.image.version>
+        name: redis
+        command: ["redis-server", "--appendonly", "yes"]
+        ports:
+        - containerPort: 6379
+          name: "redis"
+        resources:
+          limits:
+            cpu: <vars.redis.limits.cpu>
+            memory: <vars.redis.limits.memory>
+          requests:
+            cpu: <vars.redis.requests.cpu>
+            memory: <vars.redis.requests.memory>
+        volumeMounts:
+        - mountPath: /data
+          name: data
+          subPath: redis
+      restartPolicy: Always
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: piwik-andrea
+<affinitiesGroup(parent, vars)>
+<tolerationsGroup(parent, vars)>
+
+---
+
+>>
