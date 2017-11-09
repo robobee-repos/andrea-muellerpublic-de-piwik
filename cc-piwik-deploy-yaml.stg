@@ -163,8 +163,6 @@ spec:
           subPath: html
         - mountPath: /nginx-in
           name: nginx-config
-        - mountPath: /piwik-in
-          name: piwik-config
       restartPolicy: Always
       volumes:
       - name: html
@@ -173,6 +171,9 @@ spec:
       - name: nginx-config
         configMap:
           name: nginx
+      - name: piwik-config
+        configMap:
+          name: piwik
 <affinitiesGroup(parent, vars)>
 <tolerationsGroup(parent, vars)>
 
