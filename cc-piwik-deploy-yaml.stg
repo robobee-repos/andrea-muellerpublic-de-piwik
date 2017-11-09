@@ -3,7 +3,7 @@
  *
  * vars.piwik.image.name
  * vars.piwik.image.version
- * vars.piwik.php.memoryLimit_MB
+ * vars.piwik.php.memoryLimit
  * vars.piwik.php.maxExecutionTime
  * vars.piwik.php.maxChildren
  * vars.piwik.php.startServers
@@ -11,7 +11,7 @@
  * vars.piwik.php.maxSpareServers
  * vars.piwik.php.opcacheEnable
  * vars.piwik.php.opcacheEnableCLI
- * vars.piwik.php.opcacheMemoryConsumption_MB
+ * vars.piwik.php.opcacheMemoryConsumption
  * vars.piwik.php.slowlogTimeout
  * vars.piwik.limits.cpu
  * vars.piwik.limits.memory
@@ -96,8 +96,8 @@ spec:
       - image: <vars.piwik.image.name>:<vars.piwik.image.version>
         name: piwik
         env:
-        - name: PHP_MEMORY_LIMIT_MB
-          value: "<vars.piwik.php.memoryLimit_MB>"
+        - name: PHP_MEMORY_LIMIT
+          value: "<vars.piwik.php.memoryLimit>"
         - name: PHP_MAX_EXECUTION_TIME
           value: "<vars.piwik.php.maxExecutionTime>"
         - name: PHP_FPM_MAX_CHILDREN
@@ -112,8 +112,8 @@ spec:
           value: "<vars.piwik.php.opcacheEnable>"
         - name: PHP_OPCACHE_ENABLE_CLI
           value: "<vars.piwik.php.opcacheEnableCLI>"
-        - name: PHP_OPCACHE_MEMORY_CONSUMPTION_MB
-          value: "<vars.piwik.php.opcacheMemoryConsumption_MB>"
+        - name: PHP_OPCACHE_MEMORY_CONSUMPTION
+          value: "<vars.piwik.php.opcacheMemoryConsumption>"
         - name: PHP_FPM_REQUEST_SLOWLOG_TIMEOUT
           value: "<vars.piwik.php.slowlogTimeout>"
         ports:
@@ -163,6 +163,8 @@ spec:
           subPath: html
         - mountPath: /nginx-in
           name: nginx-config
+        - mountPath: /piwik-in
+          name: piwik-config
       restartPolicy: Always
       volumes:
       - name: html
