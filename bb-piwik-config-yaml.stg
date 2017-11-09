@@ -32,6 +32,20 @@ data:
     trusted_hosts[] = "www.interscalar.com"
     session_save_handler = dbtable
 
+    [Cache]
+    backend = chained
+
+    [ChainedCache]
+    backends[] = array
+    backends[] = redis
+
+    [RedisCache]
+    host = "redis.piwik-andrea" 
+    port = 6379
+    timeout = 5.0
+    password = ""
+    database = 14
+
     [Plugins]
     Plugins[] = "CorePluginsAdmin"
     Plugins[] = "CoreAdminHome"
