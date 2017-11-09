@@ -130,6 +130,8 @@ spec:
         - mountPath: /var/www/html
           name: html
           subPath: html
+        - mountPath: /piwik-in
+          name: piwik-config
       - image: <vars.nginx.image.name>:<vars.nginx.image.version>
         name: nginx
         env:
