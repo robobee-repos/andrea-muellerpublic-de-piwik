@@ -7,7 +7,14 @@
  * vars.redis.limits.memory
  * vars.redis.requests.cpu
  * vars.redis.requests.memory
+ * 
+ * Optional:
+ * 
+ * vars.redis.affinityRequired
+ * vars.redis.allowOnMaster
+ * vars.redis.tolerations[]
  */
+
 import "affinities.stg"
 import "tolerations.stg"
 
@@ -25,7 +32,7 @@ metadata:
   namespace: piwik-andrea
   labels:
     app: redis
-    tier: cache
+    tier: backend
     group: piwik-andrea
 spec:
   ports:
@@ -44,20 +51,20 @@ metadata:
   namespace: piwik-andrea
   labels:
     app: redis
-    tier: cache
+    tier: backend
     group: piwik-andrea
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: redis
-      tier: cache
+      tier: backend
       group: piwik-andrea
   template:
     metadata:
       labels:
         app: redis
-        tier: cache
+        tier: backend
         group: piwik-andrea
     spec:
       containers:
@@ -83,8 +90,9 @@ spec:
       - name: data
         persistentVolumeClaim:
           claimName: piwik-andrea
-<affinitiesGroup(parent, vars)>
-<tolerationsGroup(parent, vars)>
+      <affinitiesGroup(parent, vars, vars.redis.affinityRequired)>
+      <tolerationMaster(parent, vars, vars.redis.allowOnMaster)>
+      <tolerationsGroup(parent, vars, vars.redis.tolerations, vars.redis.allowOnMaster)>
 
 ---
 

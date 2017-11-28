@@ -1,34 +1,36 @@
 /*
  *
  */
-affinitiesGroup(parent, vars) ::= <<
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: muellerpublic.de/role
-                operator: In
-                values:
-                - web
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 10
-              preference:
-                matchExpressions:
-                - key: muellerpublic.de/role
-                  operator: In
-                  values:
-                  - web
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - weight: 100
-            podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: group
-                  operator: In
-                  values:
-                  - piwik-andrea
-              topologyKey: kubernetes.io/hostname
+affinitiesGroup(parent, vars, affinityRequired) ::= <<
+affinity:
+  nodeAffinity:
+<if(affinityRequired)>
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: muellerpublic.de/dev
+          operator: In
+          values:
+          - required
+<else>
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+        - key: muellerpublic.de/dev
+          operator: In
+          values:
+          - preferred
+<endif>
+  podAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: muellerpublic.de/group
+            operator: In
+            values:
+            - anrisoftware
+        topologyKey: kubernetes.io/hostname
 >>

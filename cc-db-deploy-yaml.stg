@@ -5,6 +5,17 @@
  * vars.db.limits.memory
  * vars.db.requests.cpu
  * vars.db.requests.memory
+ * vars.db.root.user
+ * vars.db.root.password
+ * vars.db.piwik.db
+ * vars.db.piwik.user
+ * vars.db.piwik.password
+ * 
+ * Optional:
+ * 
+ * vars.db.affinityRequired
+ * vars.db.allowOnMaster
+ * vars.db.tolerations[]
  */
 import "maradns_probe.stg"
 import "affinities.stg"
@@ -14,6 +25,25 @@ import "tolerations.stg"
  *
  */
 cc-db-deploy-yaml(parent, vars) ::= <<
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db
+  labels:
+    app: db
+    tier: backend
+    group: piwik-andrea
+  namespace: piwik-andrea
+type: Opaque
+data:
+  root_user: <vars.db.root.user;format="base64">
+  root_password: <vars.db.root.password;format="base64">
+  piwik_db: <vars.db.piwik.db;format="base64">
+  piwik_user: <vars.db.piwik.user;format="base64">
+  piwik_password: <vars.db.piwik.password;format="base64">
 
 ---
 
@@ -102,14 +132,15 @@ spec:
         - mountPath: /bitnami/mariadb
           name: db
           subPath: db
-<readinessProbe(parent, vars)>
+      <readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
       - name: db
         persistentVolumeClaim:
           claimName: piwik-andrea
-<affinitiesGroup(parent, vars)>
-<tolerationsGroup(parent, vars)>
+      <affinitiesGroup(parent, vars, vars.db.affinityRequired)>
+      <tolerationMaster(parent, vars, vars.db.allowOnMaster)>
+      <tolerationsGroup(parent, vars, vars.db.tolerations, vars.db.allowOnMaster)>
 
 ---
 
