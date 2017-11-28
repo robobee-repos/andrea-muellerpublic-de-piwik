@@ -36,6 +36,7 @@ import "nginx_config.stg"
 import "nginx_probe.stg"
 import "affinities.stg"
 import "tolerations.stg"
+import "ingress_config.stg"
 
 /*
  *
@@ -375,6 +376,33 @@ spec:
       <affinitiesGroup(parent, vars, vars.piwik.affinityRequired)>
       <tolerationMaster(parent, vars, vars.piwik.allowOnMaster)>
       <tolerationsGroup(parent, vars, vars.piwik.tolerations, vars.piwik.allowOnMaster)>
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: piwik
+  namespace: piwik-andrea
+  labels:
+    app: piwik
+    tier: frontend
+    group: piwik-andrea
+  annotations:
+    <ingressDefaultAnnotations(parent, vars, vars.nginx)>
+spec:
+  tls:
+  - hosts:
+    - piwik.andrea.muellerpublic.de
+    secretName: tls-secret
+  rules:
+  - host: piwik.andrea.muellerpublic.de
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: piwik
+          servicePort: 8080
 
 ---
 
