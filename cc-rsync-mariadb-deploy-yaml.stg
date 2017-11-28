@@ -7,7 +7,14 @@
  * vars.rsync.limits.memory
  * vars.rsync.requests.cpu
  * vars.rsync.requests.memory
+ * 
+ * Optional:
+ * 
+ * vars.db.affinityRequired
+ * vars.db.allowOnMaster
+ * vars.db.tolerations[]
  */
+
 import "affinities.stg"
 import "tolerations.stg"
 
@@ -77,7 +84,8 @@ spec:
       - name: db
         persistentVolumeClaim:
           claimName: piwik-andrea
-<affinitiesGroup(parent, vars)>
-<tolerationsGroup(parent, vars)>
+      <affinitiesGroup(parent, vars, vars.db.affinityRequired)>
+      <tolerationMaster(parent, vars, vars.db.allowOnMaster)>
+      <tolerationsGroup(parent, vars, vars.db.tolerations, vars.db.allowOnMaster)>
 
 >>

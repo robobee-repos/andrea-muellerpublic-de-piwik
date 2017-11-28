@@ -7,6 +7,12 @@
  * vars.rsync.limits.memory
  * vars.rsync.requests.cpu
  * vars.rsync.requests.memory
+ * 
+ * Optional:
+ * 
+ * vars.piwik.affinityRequired
+ * vars.piwik.allowOnMaster
+ * vars.piwik.tolerations[]
  */
 
 import "affinities.stg"
@@ -78,7 +84,8 @@ spec:
       - name: html
         persistentVolumeClaim:
           claimName: piwik-andrea
-<affinitiesGroup(parent, vars)>
-<tolerationsGroup(parent, vars)>
+      <affinitiesGroup(parent, vars, vars.piwik.affinityRequired)>
+      <tolerationMaster(parent, vars, vars.piwik.allowOnMaster)>
+      <tolerationsGroup(parent, vars, vars.piwik.tolerations, vars.piwik.allowOnMaster)>
 
 >>
