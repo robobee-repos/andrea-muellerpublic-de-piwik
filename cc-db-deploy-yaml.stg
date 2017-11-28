@@ -121,6 +121,7 @@ spec:
         ports:
         - containerPort: 3306
           name: "mysql"
+        <readinessProbe(parent, vars)>
         resources:
           limits:
             cpu: <vars.db.limits.cpu>
@@ -132,7 +133,6 @@ spec:
         - mountPath: /bitnami/mariadb
           name: db
           subPath: db
-      <readinessProbe(parent, vars)>
       restartPolicy: Always
       volumes:
       - name: db
